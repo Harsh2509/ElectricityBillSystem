@@ -8,13 +8,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 
-public class CustomerDetails extends JFrame implements ActionListener {
-    Choice searchMeterCho, searchNameCho;
+public class DepositDetails extends JFrame implements ActionListener {
+    Choice searchMeterCho,searchMonthCho;
     JTable table;
-    JButton search, print, close;
+    JButton search,print,close;
 
-    CustomerDetails(){
-        super("Customer Details");
+    DepositDetails(){
+        super("Deposit Details");
         getContentPane().setBackground(new Color(192,186,254));
         setSize(700,500);
         setLocation(400,200);
@@ -30,7 +30,7 @@ public class CustomerDetails extends JFrame implements ActionListener {
 
         try{
             database c= new database();
-            ResultSet resultSet = c.statement.executeQuery("select * from new_customer");
+            ResultSet resultSet = c.statement.executeQuery("select * from bill");
             while (resultSet.next()){
                 searchMeterCho.add(resultSet.getString("meter_no"));
             }
@@ -38,36 +38,42 @@ public class CustomerDetails extends JFrame implements ActionListener {
             e.printStackTrace();
         }
 
-        JLabel searchName = new JLabel("Search By Name");
-        searchName.setBounds(400,20,100,20);
-        add(searchName);
+        JLabel searchMonth = new JLabel("Search By Name");
+        searchMonth.setBounds(400,20,100,20);
+        add(searchMonth);
 
-        searchNameCho = new Choice();
-        searchNameCho.setBounds(520,20,150,20);
-        add(searchNameCho);
+        searchMonthCho = new Choice();
+        searchMonthCho.add("January");
+        searchMonthCho.add("February");
+        searchMonthCho.add("March");
+        searchMonthCho.add("April");
+        searchMonthCho.add("May");
+        searchMonthCho.add("June");
+        searchMonthCho.add("July");
+        searchMonthCho.add("August");
+        searchMonthCho.add("September");
+        searchMonthCho.add("October");
+        searchMonthCho.add("November");
+        searchMonthCho.add("December");
+        searchMonthCho.setBounds(520,20,150,20);
+        add(searchMonthCho);
 
+
+
+        table = new JTable();
         try{
-            database c= new database();
-            ResultSet resultSet = c.statement.executeQuery("select * from new_customer");
-            while (resultSet.next()){
-                searchNameCho.add(resultSet.getString("name"));
-            }
+            database c =new database();
+            ResultSet resultSet = c.statement.executeQuery("select * from bill");
+            table.setModel(DbUtils.resultSetToTableModel(resultSet));
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        table = new JTable();
-        try{
-            database c = new database();
-            ResultSet resultSet = c.statement.executeQuery("SELECT * FROM new_customer");
-            table.setModel(DbUtils.resultSetToTableModel(resultSet));
-        }catch (Exception exc){
-            exc.printStackTrace();
-        }
-        JScrollPane scrollPane= new JScrollPane(table);
+        JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBounds(0,100,700,500);
         scrollPane.setBackground(Color.white);
         add(scrollPane);
+
 
         search = new JButton("Search");
         search.setBackground(Color.white);
@@ -88,13 +94,12 @@ public class CustomerDetails extends JFrame implements ActionListener {
         add(close);
 
         setVisible(true);
-
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==search){
-            String query_search = "select * from new_customer where meter_no = '"+searchMeterCho.getSelectedItem()+"' and name = '"+searchNameCho.getSelectedItem()+"'" ;
+            String query_search = "select * from bill where meter_no = '"+searchMeterCho.getSelectedItem()+"' and month = '"+searchMonthCho.getSelectedItem()+"'" ;
             try{
                 database c = new database();
                 ResultSet resultSet = c.statement.executeQuery(query_search);
@@ -116,6 +121,7 @@ public class CustomerDetails extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new CustomerDetails();
+        new DepositDetails();
     }
+
 }

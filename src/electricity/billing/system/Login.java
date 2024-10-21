@@ -72,31 +72,30 @@ public class Login extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == loginButton){
-            String suser = userText.getText();
+        if (e.getSource()==loginButton){
+            String susername = userText.getText();
             String spassword = passwordText.getText();
-            String sloginChoice = loginChoice.getSelectedItem();
+            String suser = loginChoice.getSelectedItem();
 
             try{
-                database c = new database();
-                String query = "SELECT * FROM Signup WHERE username = '"+suser+"' AND password = '"+spassword+"' AND usertype = '"+sloginChoice+"'";
-                ResultSet result = c.statement.executeQuery(query);
+                database d = new database();
+                String queryy = "select * from Signup where username = '"+susername+"' and password = '"+spassword+"' and usertype ='"+suser+"'";
+                ResultSet resultSet = d.statement.executeQuery(queryy);
 
-                if (result.next()){
+                if (resultSet.next()){
+                    String meter = resultSet.getString("meter_no");
                     setVisible(false);
-                    new main_class();
-                }else{
-                    JOptionPane.showMessageDialog(null, "Invalid credentials");
+                    new main_class(suser,meter);
+                }else {
+                    JOptionPane.showMessageDialog(null ,"Invalid Login");
                 }
 
-            }catch(Exception exc){
-                exc.printStackTrace();
+            }catch (Exception E){
+                E.printStackTrace();
             }
-        }
-        else if (e.getSource() == cancelButton){
+        } else if (e.getSource()==cancelButton) {
             setVisible(false);
-        }
-        else if (e.getSource() == signupButton){
+        } else if (e.getSource()==signupButton) {
             setVisible(false);
             new Signup();
         }
